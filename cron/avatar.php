@@ -19,29 +19,35 @@ function sendRequest($method, $data = []) {
     return $result ? json_decode($result, true) : null;
 }
 
-$currentId = file_get_contents('avatar.counter');
+$current_id = file_get_contents('avatar.counter');
 
-$query = "SELECT MAX(id) AS max_id FROM users";
+$query = "SELECT MAX(id) AS max_id FROM `users`";
 $result = $link->query($query);
-$maxId = $result ? $result->fetch_assoc()['max_id'] : 0;
+if ($result) {
+    $row = $result->fetch_assoc();
+    $maxId = $row['max_id'];
+} else {
+    $link->close();
+    exit;
+}
 
-if ($currentId > $maxId) {
-    $currentId = 0;
+if ($current_id > $maxId) {
+    $current_id = 0;
 }
 
 $query = "SELECT id, telegram_id FROM users WHERE id = ?";
 $stmt = $link->prepare($query);
-$stmt->bind_param("i", $currentId);
+$stmt->bind_param("i", $current_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($row = $result->fetch_assoc()) {
     $id = $row['id'];
-    $telegramId = $row['telegram_id'];
-    $defaultAvatar = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
-    $avatar = $defaultAvatar;
+    $telegram_id = $row['telegram_id'];
+    $default_avatar = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
+    $avatar = $default_avatar;
 
-    $response = sendRequest('getUserProfilePhotos', ['user_id' => $telegramId]);
+    $response = sendRequest('getUserProfilePhotos', ['user_id' => $telegram_id]);
 
     if ($response && $response['ok'] && $response['result']['total_count'] > 0) {
         $photos = $response['result']['photos'];
@@ -51,7 +57,9 @@ if ($row = $result->fetch_assoc()) {
 
         if ($fileResponse && $fileResponse['ok']) {
             $filePath = $fileResponse['result']['file_path'];
-            $avatar = "https://api.telegram.org/file/bot$token/$filePath";
+            $fileUrl = "https://api.telegram.org/file/bot$tg_token/$filePath";
+
+            $avatar = $fileUrl;
         }
     }
 
@@ -62,8 +70,8 @@ if ($row = $result->fetch_assoc()) {
     $updateStmt->close();
 }
 
-$currentId++;
-file_put_contents('avatar.counter', $currentId);
+$current_id++;
+file_put_contents('avatar.counter', $current_id);
 $stmt->close();
 $link->close();
 ?>
