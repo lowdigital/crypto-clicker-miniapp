@@ -7,6 +7,7 @@ $user_id = $link->real_escape_string($user_id);
 
 $gift = false;
 $success = false;
+$output = [];
 
 $query = "SELECT boosters, last_ticket FROM users WHERE telegram_id = ?";
 $stmt = $link->prepare($query);
@@ -21,11 +22,10 @@ if ($row = $result->fetch_assoc()) {
     $interval = $now->diff($last_ticket);
     $hours = $interval->h + ($interval->days * 24);
 
-    if ($hours >= 5) {
-        $gift = true;
-    } else {
-        $gift = false;
-        $gift_remaining = (5 * 3600) - ($interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400));
+    $gift = $hours >= 5;
+
+    if (!$gift) {
+        $gift_remaining = (5 * 3600) - $interval->s - ($interval->i * 60) - ($interval->h * 3600) - ($interval->days * 86400);
     }
 }
 
@@ -33,22 +33,10 @@ $add_tickets = 3;
 if (is_array($boosters)) {
     foreach ($boosters as $booster) {
         if ($booster['booster_code'] == 'treasure') {
-            switch ($booster['booster_lvl']) {
-                case 1:
-                    $add_tickets = 5;
-                    break;
-                case 2:
-                    $add_tickets = 7;
-                    break;
-                case 3:
-                    $add_tickets = 9;
-                    break;
-                case 4:
-                    $add_tickets = 12;
-                    break;
-                case 5:
-                    $add_tickets = 15;
-                    break;
+            $levels_to_tickets = [1 => 5, 2 => 7, 3 => 9, 4 => 12, 5 => 15];
+            if (isset($levels_to_tickets[$booster['booster_lvl']])) {
+                $add_tickets = $levels_to_tickets[$booster['booster_lvl']];
+                break;
             }
         }
     }
@@ -65,11 +53,15 @@ if ($gift) {
 }
 
 if ($success) {
-    echo "ok";
+    $output = [
+        'status' => 'ok',
+        'text' => "Вы получили $add_tickets билета" . ($add_tickets > 1 ? 'ов' : '')
+    ];
 } else {
-    echo "error";
+    $output['status'] = 'error';
 }
 
+echo json_encode($output);
 $stmt->close();
 $link->close();
 ?>

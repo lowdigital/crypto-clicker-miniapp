@@ -137,32 +137,65 @@ $(document).ready(() => {
 		const giftButton = $('.card-gift');
 		giftButton.prop('disabled', true);
 
-		$.post('/api/minigame/get_ticket.php', { user_id: user.id }, (response) => {
-			if (response === 'ok') {
-				Swal.fire({
-					icon: "success",
-					title: "Отлично!",
-					html: "Вы получили 3 билета",
-					confirmButtonText: "Забрать билеты",
-					confirmButtonColor: "#8bc05d",
-					allowOutsideClick: false
-				}).then(() => {
-					const giftSound = document.getElementById('gift-sound');
-					giftSound.play();
-					if (navigator.vibrate) navigator.vibrate(50);
-					
-					rainbowFireworks(window.innerWidth / 2, window.innerHeight / 2, 'red');
-
-					$.post('/api/interface/update.php', { user_id: user.id, user_name: user.username }, (response) => {
-						updateUI(response);
+		$.post('/api/minigame/get_ticket.php', { user_id: user.id })
+			.done((response) => {
+				let json;
+				try {
+					json = JSON.parse(response);
+				} catch (e) {
+					Swal.fire({
+						icon: "error",
+						title: "Ошибка",
+						html: "Некорректный ответ от сервера. Попробуйте позже.",
+						confirmButtonText: "Закрыть",
+						confirmButtonColor: "#db4552",
+						allowOutsideClick: false
+					}).then(() => {
+						if (navigator.vibrate) navigator.vibrate(50);
 						giftButton.prop('disabled', false);
 					});
-				});
-			} else {
+					return;
+				}
+
+				if (json.status === 'ok') {
+					Swal.fire({
+						icon: "success",
+						title: "Отлично!",
+						html: json.text,
+						confirmButtonText: "Забрать билеты",
+						confirmButtonColor: "#8bc05d",
+						allowOutsideClick: false
+					}).then(() => {
+						const giftSound = document.getElementById('gift-sound');
+						giftSound.play();
+						if (navigator.vibrate) navigator.vibrate(50);
+
+						rainbowFireworks(window.innerWidth / 2, window.innerHeight / 2, 'red');
+
+						$.post('/api/interface/update.php', { user_id: user.id, user_name: user.username }, (response) => {
+							updateUI(response);
+							giftButton.prop('disabled', false);
+						});
+					});
+				} else {
+					Swal.fire({
+						icon: "error",
+						title: "Ошибка",
+						html: "Сейчас нельзя получить бесплатные билеты. Вернитесь чуть позже",
+						confirmButtonText: "Закрыть",
+						confirmButtonColor: "#db4552",
+						allowOutsideClick: false
+					}).then(() => {
+						if (navigator.vibrate) navigator.vibrate(50);
+						giftButton.prop('disabled', false);
+					});
+				}
+			})
+			.fail(() => {
 				Swal.fire({
 					icon: "error",
 					title: "Ошибка",
-					html: "Сейчас нельзя получить бесплатные билеты. Вернитесь чуть позже",
+					html: "Не удалось выполнить запрос. Попробуйте позже.",
 					confirmButtonText: "Закрыть",
 					confirmButtonColor: "#db4552",
 					allowOutsideClick: false
@@ -170,15 +203,10 @@ $(document).ready(() => {
 					if (navigator.vibrate) navigator.vibrate(50);
 					giftButton.prop('disabled', false);
 				});
-			}
-		}).fail(() => {
-			giftButton.prop('disabled', false);
-		});
+			});
 	};
 
 	$('.card-gift').on('click', getTicket);
-
-
 
 	const updateClickAreaBackground = () => {
 		if (userBalance >= 100000000) {
