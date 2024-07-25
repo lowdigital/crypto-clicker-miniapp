@@ -1,0 +1,265 @@
+:root {
+    --color-highlight: #1947bf;
+    --color-green-dark: #8bc05d;
+    --color-yellow-dark: #ffdd57;
+    --color-red-dark: #db4552;
+    --color-white: #ffffff;
+}
+
+.click-area {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+    background: url('/assets/img/main_coin_1.png') no-repeat center center;
+    background-size: cover;
+    outline: none;
+    transition: transform 0.025s;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+.click-area:active {
+    transform: scale(0.95);
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.footer-bar-6 .active-nav em {
+    background-image: none !important;
+}
+
+.mactive {
+    border-bottom: 4px solid var(--color-highlight);
+    border-radius: 12px;
+    background: var(--color-white);
+}
+
+#game-area {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin-bottom: -110px;
+}
+
+.item {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+.scoreboard {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.5);
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.endgame-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: none;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.endgame-message h1 {
+    font-size: 36px;
+    margin: 20px 0;
+    color: var(--color-white);
+}
+
+.endgame-message button {
+    font-size: 18px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: var(--color-green-dark);
+    color: var(--color-white);
+    border: none;
+    border-radius: 5px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    display: none;
+}
+
+.freeze-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 0, 255, 0.1), rgba(0, 0, 255, 0.4));
+    z-index: 500;
+    pointer-events: none;
+    display: none;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 0.1;
+    }
+}
+
+@keyframes pulse-bg {
+    0% {
+        background-color: rgba(100, 210, 255, 0.3);
+    }
+    50% {
+        background-color: rgba(100, 210, 255, 0.6);
+    }
+    100% {
+        background-color: rgba(100, 210, 255, 0.3);
+    }
+}
+
+.pulse-bg {
+    animation: pulse-bg 0.5s infinite;
+}
+
+@keyframes flash-red {
+    0% {
+        background-color: rgba(255, 0, 0, 0.7);
+    }
+    100% {
+        background-color: rgba(255, 0, 0, 0);
+    }
+}
+
+.flash-red {
+    animation: flash-red 0.5s ease-out;
+}
+
+@keyframes flash-green {
+    0% {
+        background-color: rgba(50, 255, 50, 0.5);
+    }
+    100% {
+        background-color: rgba(50, 255, 50, 0);
+    }
+}
+
+.flash-green {
+    animation: flash-green 0.5s ease-out;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100%);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.coin {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: yellow;
+    border-radius: 50%;
+    animation: fall 1s linear;
+}
+
+.content {
+    position: relative;
+    overflow: hidden;
+}
+
+.float-up {
+    position: absolute;
+    font-size: 36px;
+    color: var(--color-white);
+    animation: float-up 1s ease-out;
+    pointer-events: none;
+    font-weight: 600;
+}
+
+@keyframes float-up {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
+
+.item.enlarged {
+    width: 75px;
+    height: 75px;
+}
+
+.card-game .content[disabled],
+.card-gift .content[disabled] {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.booster-card img {
+    margin-bottom: 6px;
+}
+
+.booster-card {
+    color: #333 !important;
+}
+
+svg {
+    vertical-align: middle;
+}
+
+.swal2-popup {
+    font-size: 100% !important;
+}
