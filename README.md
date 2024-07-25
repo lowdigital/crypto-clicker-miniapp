@@ -4,6 +4,10 @@
 
 BOMJ COIN is a Telegram bot developed as a demonstration of the capabilities of the TON blockchain. The project was created by [low digital](https://t.me/low_digital) and quickly gained popularity due to its engaging gameplay and virtual coin earning opportunities.
 
+## Demo
+
+You can check out the game right now on Telegram: https://t.me/bmjcoinbot
+
 ## Description
 
 BOMJ COIN is an interactive game where users can earn virtual coins, enhance their skills, and compete with other players. The bot offers several game modes, including mini-games and an upgrade system.
