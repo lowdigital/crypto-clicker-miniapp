@@ -1,3 +1,4 @@
+![Описание картинки](demo.jpg)
 
 # Crypto Clicker Game - Telegram Miniapp
 
