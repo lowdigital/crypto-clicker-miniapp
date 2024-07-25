@@ -15,7 +15,7 @@ $current_time->setTimezone(new DateTimeZone('UTC'));
 
 $query = "SELECT balance, income, boosters, last_game FROM users WHERE telegram_id = ?";
 $stmt = $link->prepare($query);
-$stmt->bind_param("s", $user_id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 

@@ -8,8 +8,8 @@ file_put_contents($log_path, $log, FILE_APPEND);
 include("_dbconnect.php");
 
 function send_message($user_id, $message_id, $tg_message) {
-	global $tg_token;
-	
+    global $tg_token;
+
     $tg_data = [
         'chat_id' => $user_id,
         'text' => $tg_message,
@@ -22,6 +22,11 @@ function send_message($user_id, $message_id, $tg_message) {
     }
 
     $response = file_get_contents("https://api.telegram.org/bot$tg_token/sendMessage?" . http_build_query($tg_data));
+    
+    // Logging the response
+    global $log_path;
+    file_put_contents($log_path, "Telegram API Response: " . $response . "\n", FILE_APPEND);
+
     return $response !== false;
 }
 
@@ -50,8 +55,8 @@ if ($chat_id) {
     }
     fclose($f_users_list);
 } else {
-	$link->close();
-	exit;
+    $link->close();
+    exit;
 }
 
 if (isset($data->message->text) && strpos($data->message->text, "/start") !== false) {
@@ -62,12 +67,12 @@ if (isset($data->message->text) && strpos($data->message->text, "/start") !== fa
 
     $query = "SELECT COUNT(*) as count FROM users WHERE telegram_id = ?";
     $stmt = $link->prepare($query);
-    $stmt->bind_param("s", $user_id);
+    $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     if ($row['count'] > 0) {
-		$link->close();
+        $link->close();
         exit;
     }
 
@@ -84,7 +89,7 @@ if (isset($data->message->text) && strpos($data->message->text, "/start") !== fa
             $ref_new_str = generateRandomString();
             $query = "INSERT INTO users (telegram_id, user_name, referal, ref_str, balance) VALUES (?, ?, ?, ?, 1000000)";
             $stmt = $link->prepare($query);
-            $stmt->bind_param("ssiss", $user_id, $user_name, $referal_id, $ref_new_str);
+            $stmt->bind_param("issi", $user_id, $user_name, $referal_id, $ref_new_str);
             $stmt->execute();
 
             $query = "UPDATE users SET balance = balance + 2000000, tickets = tickets + 5 WHERE id = ?";

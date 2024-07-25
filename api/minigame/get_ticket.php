@@ -10,7 +10,7 @@ $success = false;
 
 $query = "SELECT boosters, last_ticket FROM users WHERE telegram_id = ?";
 $stmt = $link->prepare($query);
-$stmt->bind_param("s", $user_id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -57,7 +57,7 @@ if (is_array($boosters)) {
 if ($gift) {
     $update_query = "UPDATE users SET tickets = tickets + ?, last_ticket = NOW() WHERE telegram_id = ?";
     $update_stmt = $link->prepare($update_query);
-    $update_stmt->bind_param("is", $add_tickets, $user_id);
+    $update_stmt->bind_param("ii", $add_tickets, $user_id);
     if ($update_stmt->execute()) {
         $success = true;
     }

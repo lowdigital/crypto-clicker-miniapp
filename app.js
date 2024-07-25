@@ -1,7 +1,7 @@
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 let userBalance = 0;
-
+	
 $(document).ready(() => {	
     const clickArea = document.getElementById('click-area');
     clickArea.addEventListener('touchmove', event => event.preventDefault());
@@ -150,7 +150,8 @@ $(document).ready(() => {
 					const giftSound = document.getElementById('gift-sound');
 					giftSound.play();
 					if (navigator.vibrate) navigator.vibrate(50);
-					createFireworkDisplay();
+					
+					rainbowFireworks(window.innerWidth / 2, window.innerHeight / 2, 'red');
 
 					$.post('/api/interface/update.php', { user_id: user.id, user_name: user.username }, (response) => {
 						updateUI(response);
@@ -178,69 +179,6 @@ $(document).ready(() => {
 	$('.card-gift').on('click', getTicket);
 
 
-    const createFireworkDisplay = () => {
-        const canvas = document.createElement('canvas');
-        canvas.id = 'fireworksCanvas';
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = '9999';
-        document.body.appendChild(canvas);
-
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const particles = [];
-        const particleCount = 200;
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff'];
-
-        const createParticle = (x, y) => {
-            const angle = Math.random() * 2 * Math.PI;
-            const speed = Math.random() * 5 + 2;
-            return {
-                x,
-                y,
-                dx: Math.cos(angle) * speed,
-                dy: Math.sin(angle) * speed,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                life: 100
-            };
-        };
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(createParticle(window.innerWidth / 2, window.innerHeight / 2));
-        }
-
-        const updateParticles = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((particle, index) => {
-                particle.x += particle.dx;
-                particle.y += particle.dy;
-                particle.life -= 1;
-
-                if (particle.life <= 0) {
-                    particles.splice(index, 1);
-                }
-
-                ctx.fillStyle = particle.color;
-                ctx.beginPath();
-                ctx.arc(particle.x, particle.y, 3, 0, 2 * Math.PI);
-                ctx.fill();
-            });
-
-            if (particles.length > 0) {
-                requestAnimationFrame(updateParticles);
-            } else {
-                document.body.removeChild(canvas);
-            }
-        };
-
-        updateParticles();
-    };
 
 	const updateClickAreaBackground = () => {
 		if (userBalance >= 100000000) {
@@ -773,11 +711,12 @@ $(document).ready(() => {
         canvas.height = window.innerHeight;
 
         const particles = [];
-        const particleCount = 100;
+        const particleCount = 30;
         const colors = {
             'green': '#00ff00',
             'blue': '#0000ff',
-            'black': '#000000'
+            'black': '#000000',
+			'red': '#ff0000',
         };
 
         const createParticle = (x, y) => {
@@ -789,7 +728,7 @@ $(document).ready(() => {
                 dx: Math.cos(angle) * speed,
                 dy: Math.sin(angle) * speed,
                 color: colors[color],
-                life: 100
+                life: 50
             };
         };
 
@@ -823,6 +762,71 @@ $(document).ready(() => {
 
         updateParticles();
     };
+	
+	const rainbowFireworks = (x, y) => {
+		const canvas = document.createElement('canvas');
+		canvas.id = 'fireworksCanvas';
+		canvas.style.position = 'fixed';
+		canvas.style.top = '0';
+		canvas.style.left = '0';
+		canvas.style.width = '100%';
+		canvas.style.height = '100%';
+		canvas.style.pointerEvents = 'none';
+		canvas.style.zIndex = '9999';
+		document.body.appendChild(canvas);
+
+		const ctx = canvas.getContext('2d');
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const particles = [];
+		const particleCount = 100;
+		const colors = ['#00ff00', '#0000ff', '#000000', '#ff0000', '#ffff00', '#00ffff', '#ff00ff'];
+
+		const createParticle = (x, y) => {
+			const angle = Math.random() * 2 * Math.PI;
+			const speed = Math.random() * 5 + 2;
+			const color = colors[Math.floor(Math.random() * colors.length)];
+			return {
+				x,
+				y,
+				dx: Math.cos(angle) * speed,
+				dy: Math.sin(angle) * speed,
+				color,
+				life: 100
+			};
+		};
+
+		for (let i = 0; i < particleCount; i++) {
+			particles.push(createParticle(x, y));
+		}
+
+		const updateParticles = () => {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			particles.forEach((particle, index) => {
+				particle.x += particle.dx;
+				particle.y += particle.dy;
+				particle.life -= 1;
+
+				if (particle.life <= 0) {
+					particles.splice(index, 1);
+				}
+
+				ctx.fillStyle = particle.color;
+				ctx.beginPath();
+				ctx.arc(particle.x, particle.y, 3, 0, 2 * Math.PI);
+				ctx.fill();
+			});
+
+			if (particles.length > 0) {
+				requestAnimationFrame(updateParticles);
+			} else {
+				document.body.removeChild(canvas);
+			}
+		};
+
+		updateParticles();
+	};
 
 	const loadBoosters = () => {
 		$.post('/api/boost/list.php', { user_id: user.id, user_name: user.username }, (response) => {

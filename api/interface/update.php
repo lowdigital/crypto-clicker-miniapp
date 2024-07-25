@@ -28,7 +28,7 @@ $boosters = [];
 
 $query = "SELECT * FROM users WHERE telegram_id = ?";
 $stmt = $link->prepare($query);
-$stmt->bind_param("s", $user_id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -103,7 +103,7 @@ if ($counter == 0) {
     $ref_str = generateRandomString();
     $insert_query = "INSERT INTO users (telegram_id, user_name, ref_str, balance, tickets, last_ticket) VALUES (?, ?, ?, ?, ?, NOW())";
     $insert_stmt = $link->prepare($insert_query);
-    $insert_stmt->bind_param("sssii", $user_id, $user_name, $ref_str, $user_balance, $tickets);
+    $insert_stmt->bind_param("issii", $user_id, $user_name, $ref_str, $user_balance, $tickets); // telegram_id - bigint(20), balance - bigint(20), tickets - int(11)
     $insert_stmt->execute();
     $insert_stmt->close();
 } else {
@@ -111,7 +111,7 @@ if ($counter == 0) {
     $user_income += $tap_income;
     $update_query = "UPDATE users SET balance = ?, income = ? WHERE telegram_id = ?";
     $update_stmt = $link->prepare($update_query);
-    $update_stmt->bind_param("iis", $user_balance, $user_income, $user_id);
+    $update_stmt->bind_param("iii", $user_balance, $user_income, $user_id); // balance - bigint(20), income - bigint(20), telegram_id - bigint(20)
     $update_stmt->execute();
     $update_stmt->close();
 }

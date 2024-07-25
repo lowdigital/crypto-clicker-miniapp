@@ -7,7 +7,7 @@ $user_id = $link->real_escape_string($user_id);
 
 $query = "SELECT tickets FROM users WHERE telegram_id = ?";
 $stmt = $link->prepare($query);
-$stmt->bind_param("s", $user_id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -19,7 +19,7 @@ if ($row = $result->fetch_assoc()) {
     } else {
         $update_query = "UPDATE users SET tickets = tickets - 1, `last_game` = '" . date("Y-m-d H:i:s") . "' WHERE telegram_id = ?";
         $update_stmt = $link->prepare($update_query);
-        $update_stmt->bind_param("s", $user_id);
+        $update_stmt->bind_param("i", $user_id);
         if ($update_stmt->execute()) {
             echo "ok";
         } else {

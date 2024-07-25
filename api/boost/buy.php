@@ -13,7 +13,7 @@ $response = [];
 
 $query = "SELECT balance, boosters FROM users WHERE telegram_id = ?";
 $stmt = $link->prepare($query);
-$stmt->bind_param("s", $user_id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -43,7 +43,7 @@ if ($row = $result->fetch_assoc()) {
     }
 
     if (!$booster_found) {
-        $response = ["status" => "error", "message" => "Некорректный код бустера."];
+        $response = ["status" => "error", "message" => "Некорректный код улучшения."];
         echo json_encode($response);
         $stmt->close();
         $link->close();
@@ -76,7 +76,7 @@ if ($row = $result->fetch_assoc()) {
     $boosters_json = json_encode($boosters);
     $updateQuery = "UPDATE users SET balance = ?, boosters = ? WHERE telegram_id = ?";
     $updateStmt = $link->prepare($updateQuery);
-    $updateStmt->bind_param("iss", $balance, $boosters_json, $user_id);
+    $updateStmt->bind_param("isi", $balance, $boosters_json, $user_id);
     $updateStmt->execute();
     $updateStmt->close();
 

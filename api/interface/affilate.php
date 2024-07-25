@@ -7,7 +7,7 @@ $user_id = $link->real_escape_string($user_id);
 
 $user_info_query = "SELECT id, ref_str FROM users WHERE telegram_id = ?";
 $stmt = $link->prepare($user_info_query);
-$stmt->bind_param("s", $user_id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user_info_result = $stmt->get_result();
 
