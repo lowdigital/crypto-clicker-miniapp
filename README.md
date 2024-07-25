@@ -1,5 +1,5 @@
 
-# BOMJ COIN Telegram Bot
+# BOMJ COIN Telegram Miniapp
 
 BOMJ COIN is a Telegram bot developed as a demonstration of the capabilities of the TON blockchain. The project was created by [low digital](https://t.me/low_digital) and quickly gained popularity due to its engaging gameplay and virtual coin earning opportunities.
 
