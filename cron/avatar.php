@@ -63,7 +63,6 @@ if ($row = $result->fetch_assoc()) {
         }
     }
 
-    echo "$id: $avatar";
     $updateStmt = $link->prepare("UPDATE users SET avatar = ? WHERE id = ?");
     $updateStmt->bind_param("si", $avatar, $id);
     $updateStmt->execute();
