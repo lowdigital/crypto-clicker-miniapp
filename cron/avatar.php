@@ -41,6 +41,11 @@
 	}
 
 	$current_id = file_get_contents('avatar.counter');
+	
+	$avatarDir = '../avatar';
+	if (!is_dir($avatarDir)) {
+		mkdir($avatarDir, 0755, true);
+	}
 
 	$query = "SELECT MAX(id) AS max_id FROM `users`";
 	$result = $link->query($query);
