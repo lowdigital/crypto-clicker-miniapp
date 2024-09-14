@@ -132,4 +132,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contacts
 
-- Follow updates on the Telegram channel: [low digital](https://t.me/low_digital).
+Follow updates on the Telegram channel: [low digital](https://t.me/low_digital).
