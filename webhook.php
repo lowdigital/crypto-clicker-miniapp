@@ -89,7 +89,7 @@ if (isset($data->message->text) && strpos($data->message->text, "/start") !== fa
             $ref_new_str = generateRandomString();
             $query = "INSERT INTO users (telegram_id, user_name, referal, ref_str, balance) VALUES (?, ?, ?, ?, 1000000)";
             $stmt = $link->prepare($query);
-            $stmt->bind_param("issi", $user_id, $user_name, $referal_id, $ref_new_str);
+            $stmt->bind_param("isss", $user_id, $user_name, $referal_id, $ref_new_str);
             $stmt->execute();
 
             $query = "UPDATE users SET balance = balance + 2000000, tickets = tickets + 5 WHERE id = ?";
