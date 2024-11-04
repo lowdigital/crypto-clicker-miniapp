@@ -122,14 +122,10 @@ Enjoy managing your BOMJ COIN and climbing the leaderboards!
 - `app.js` — Main JavaScript file for the frontend.
 - `api/` — Directory with API endpoints for various bot actions.
 
-## Authors
-
-- Project Author: [low digital](https://t.me/low_digital)
-
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.
 
-## Contacts
+## Author
 
-Follow updates on the Telegram channel: [low digital](https://t.me/low_digital).
+Follow updates on my Telegram channel: [low digital](https://t.me/low_digital).
